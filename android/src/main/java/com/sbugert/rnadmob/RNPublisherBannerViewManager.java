@@ -35,6 +35,8 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
     AdSize[] validAdSizes;
     String adUnitID;
     AdSize adSize;
+    int width;
+    int height;
 
     public ReactPublisherAdView(final Context context) {
         super(context);
@@ -138,8 +140,11 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
                 adSizes.add(this.validAdSizes[i]);
             }
         }
-
-        if (adSizes.size() == 0) {
+        
+        if(this.width > 0 && this.height > 0) {
+            adSizes.add(new AdSize(this.width, this.height));
+        }
+        else if (adSizes.size() == 0) {
             adSizes.add(AdSize.BANNER);
         }
 
@@ -172,6 +177,14 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
 
     public void setTargeting(String targeting) {
         this.targetString = targeting;
+    }
+
+    public void setAdWidth(int width) {
+        this.width = width;
+    }
+
+    public void setAdHeight(int height) {
+        this.height = height;
     }
 
     public void setAdUnitID(String adUnitID) {
@@ -210,6 +223,8 @@ public class RNPublisherBannerViewManager extends ViewGroupManager<ReactPublishe
     public static final String REACT_CLASS = "RNDFPBannerView";
 
     public static final String PROP_AD_SIZE = "adSize";
+    public static final String PROP_AD_WIDTH = "adWidth";
+    public static final String PROP_AD_HEIGHT = "adHeight";
     public static final String PROP_VALID_AD_SIZES = "validAdSizes";
     public static final String PROP_AD_UNIT_ID = "adUnitID";
     public static final String PROP_BANNER_TARGETING = "targeting";
@@ -263,6 +278,16 @@ public class RNPublisherBannerViewManager extends ViewGroupManager<ReactPublishe
     @ReactProp(name = PROP_BANNER_TARGETING)
      public void setTargeting(final ReactPublisherAdView view, final String targetingString) {
         view.setTargeting(targetingString);
+    }
+
+    @ReactProp(name = PROP_AD_WIDTH)
+     public void setAdWidth(final ReactPublisherAdView view, final int width) {
+        view.setAdWidth(width);
+    }
+
+     @ReactProp(name = PROP_AD_HEIGHT)
+     public void setAdHeight(final ReactPublisherAdView view, final int height) {
+        view.setAdHeight(height);
     }
 
     @ReactProp(name = PROP_AD_SIZE)

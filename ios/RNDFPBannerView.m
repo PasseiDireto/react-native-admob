@@ -84,7 +84,11 @@
     [adSizes enumerateObjectsUsingBlock:^(id jsonValue, NSUInteger idx, __unused BOOL *stop) {
         GADAdSize adSize = [RCTConvert GADAdSize:jsonValue];
         if (GADAdSizeEqualToSize(adSize, kGADAdSizeInvalid)) {
-            RCTLogWarn(@"Invalid adSize %@", jsonValue);
+            if(_adWidth > 0 && _adHeight > 0) {
+                [validAdSizes addObject:NSValueFromGADAdSize(GADAdSizeFromCGSize(CGSizeFromString(@"{width: _adWidth, height: _adHeight}")))];
+            } else {
+                RCTLogWarn(@"Invalid adSize %@", jsonValue);
+            }
         } else {
             [validAdSizes addObject:NSValueFromGADAdSize(adSize)];
         }
