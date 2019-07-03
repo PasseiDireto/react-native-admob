@@ -75,6 +75,11 @@
         request.customTargeting = customtargeting;
     }
     request.testDevices = _testDevices;
+    if(_adWidth > 0 && _adHeight > 0) {
+        NSMutableArray * validAdSizes = [NSMutableArray array];
+        [validAdSizes addObject:NSValueFromGADAdSize(GADAdSizeFromCGSize(CGSizeMake([_adWidth doubleValue],[_adHeight doubleValue])))];
+        _bannerView.validAdSizes = validAdSizes;
+    }
     [_bannerView loadRequest:request];
 }
 
@@ -84,11 +89,9 @@
     [adSizes enumerateObjectsUsingBlock:^(id jsonValue, NSUInteger idx, __unused BOOL *stop) {
         GADAdSize adSize = [RCTConvert GADAdSize:jsonValue];
         if (GADAdSizeEqualToSize(adSize, kGADAdSizeInvalid)) {
-            if(_adWidth > 0 && _adHeight > 0) {
-                [validAdSizes addObject:NSValueFromGADAdSize(GADAdSizeFromCGSize(CGSizeFromString(@"{width: _adWidth, height: _adHeight}")))];
-            } else {
+            
                 RCTLogWarn(@"Invalid adSize %@", jsonValue);
-            }
+            
         } else {
             [validAdSizes addObject:NSValueFromGADAdSize(adSize)];
         }
