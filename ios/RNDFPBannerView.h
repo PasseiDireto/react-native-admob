@@ -12,8 +12,6 @@
 
 @property (nonatomic, copy) NSArray *validAdSizes;
 @property (nonatomic, copy) NSString *targeting;
-@property (nonatomic, copy) NSNumber *adWidth;
-@property (nonatomic, copy) NSNumber *adHeight;
 @property (nonatomic, copy) NSArray *testDevices;
 
 @property (nonatomic, copy) RCTBubblingEventBlock onSizeChange;

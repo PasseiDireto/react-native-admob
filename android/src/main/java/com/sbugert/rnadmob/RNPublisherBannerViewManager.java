@@ -3,6 +3,7 @@ package com.sbugert.rnadmob;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactContext;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
+class ReactPublisherAdView extends LinearLayout implements AppEventListener {
 
     protected PublisherAdView adView;
 
@@ -52,12 +53,17 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
         this.adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                int width = adView.getAdSize().getWidthInPixels(context);
-                int height = adView.getAdSize().getHeightInPixels(context);
+                int widthAdSize = adView.getAdSize().getWidthInPixels(context);
+                int heightAdSize = adView.getAdSize().getHeightInPixels(context);
+                if(width > 0 && height > 0)
+                {
+                    widthAdSize = width;
+                    heightAdSize = height;
+                }  
                 int left = adView.getLeft();
                 int top = adView.getTop();
-                adView.measure(width, height);
-                adView.layout(left, top, left + width, top + height);
+                adView.measure(widthAdSize, heightAdSize);
+                adView.layout(left, top, left + widthAdSize, top + heightAdSize);
                 sendOnSizeChangeEvent();
                 sendEvent(RNPublisherBannerViewManager.EVENT_AD_LOADED, null);
             }
@@ -110,10 +116,16 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
         ReactContext reactContext = (ReactContext) getContext();
         WritableMap event = Arguments.createMap();
         AdSize adSize = this.adView.getAdSize();
-        if (adSize == AdSize.SMART_BANNER) {
+        if(this.width > 0 && this.height > 0)
+        {
+            width = this.width;
+            height = this.height;
+        }   
+        else if (adSize == AdSize.SMART_BANNER) {
             width = (int) PixelUtil.toDIPFromPixel(adSize.getWidthInPixels(reactContext));
             height = (int) PixelUtil.toDIPFromPixel(adSize.getHeightInPixels(reactContext));
-        } else {
+        } 
+        else {
             width = adSize.getWidth();
             height = adSize.getHeight();
         }
@@ -141,10 +153,7 @@ class ReactPublisherAdView extends ReactViewGroup implements AppEventListener {
             }
         }
         
-        if(this.width > 0 && this.height > 0) {
-            adSizes.add(new AdSize(this.width, this.height));
-        }
-        else if (adSizes.size() == 0) {
+        if (adSizes.size() == 0) {
             adSizes.add(AdSize.BANNER);
         }
 

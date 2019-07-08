@@ -75,11 +75,7 @@
         request.customTargeting = customtargeting;
     }
     request.testDevices = _testDevices;
-    if(_adWidth > 0 && _adHeight > 0) {
-        NSMutableArray * validAdSizes = [NSMutableArray array];
-        [validAdSizes addObject:NSValueFromGADAdSize(GADAdSizeFromCGSize(CGSizeMake([_adWidth doubleValue],[_adHeight doubleValue])))];
-        _bannerView.validAdSizes = validAdSizes;
-    }
+
     [_bannerView loadRequest:request];
 }
 
